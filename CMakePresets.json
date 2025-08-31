@@ -1,0 +1,37 @@
+{
+    "version": 8,
+    "configurePresets": [
+        {
+            "name": "debug",
+            "displayName": "Debug",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "release",
+            "displayName": "Release",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "debug",
+            "displayName": "App Debug",
+            "configurePreset": "debug",
+            "configuration": "Debug"
+        },
+        {
+            "name": "release",
+            "displayName": "App Release",
+            "configurePreset": "release",
+            "configuration": "Release"
+        }
+    ]
+}
