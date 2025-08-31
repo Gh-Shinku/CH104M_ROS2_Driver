@@ -2,6 +2,7 @@
 #define SERIAL_PORT_H
 
 #include <array>
+#include <atomic>
 #include <boost/asio.hpp>
 #include <boost/crc.hpp>
 #include <cstdint>
@@ -75,7 +76,12 @@ private:
   int state_, cnt_;
   bool have_cached_frame_;
 
+  /* profiling */
+  boost::asio::steady_timer timer_;
+  std::atomic<size_t> frame_count_{0};
+
   void fill_rx_buffer();
+  void start_profiling();
 
 public:
   SerialPort(io_context &ioc, const std::string &port, const std::function<void(const ImuData &)> &serial_rx_cplt_cb);
