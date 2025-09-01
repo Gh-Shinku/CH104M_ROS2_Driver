@@ -9,9 +9,9 @@ SerialPort::SerialPort(io_context &ioc, const std::string &port, const std::func
       serial_(ioc, port),
       serial_rx_cplt_cb_(serial_rx_cplt_cb),
       ring_buffer_(RING_BUFFER_SIZE),
-      logger_(spdlog::basic_logger_mt("imu_logger", "imu.log")),
+      logger_(spdlog::basic_logger_mt("imu_logger", "imu.log", true)),
       timer_(ioc) {
-  serial_.set_option(serial_port::baud_rate(115200));
+  serial_.set_option(serial_port::baud_rate(921600));
   serial_.set_option(serial_port::flow_control(serial_port::flow_control::none));
   serial_.set_option(serial_port::parity(serial_port::parity::none));
   serial_.set_option(serial_port::stop_bits(serial_port::stop_bits::one));
@@ -70,6 +70,7 @@ void SerialPort::start_read() {
 }
 
 void SerialPort::handle_rx_data(RxBuffer::const_iterator iter, const size_t len) {
+  // logger_->info("read_some: {}(Bytes)", len);
   ring_buffer_.insert(ring_buffer_.end(), iter, iter + len);
   auto iter_header = std::find(ring_buffer_.begin(), ring_buffer_.end(), frame_header);
   if (iter_header != ring_buffer_.end() && (*(iter_header + 1)) == frame_type) {
@@ -88,6 +89,7 @@ void SerialPort::handle_rx_data(RxBuffer::const_iterator iter, const size_t len)
         logger_->warn("CRC check error");
       }
     }
+    ring_buffer_.erase(ring_buffer_.begin(), iter_header);
   } else {
     ring_buffer_.clear();
   }

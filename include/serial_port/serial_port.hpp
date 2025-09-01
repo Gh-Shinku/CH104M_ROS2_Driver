@@ -52,8 +52,8 @@ struct ImuFrameNoPadding {
 
 constexpr size_t IMU_FRAME_SIZE = sizeof(ImuFrameNoPadding);
 constexpr size_t rx_buffer_size = 2 * IMU_FRAME_SIZE - 1;
-constexpr size_t RX_BUFFER_SIZE = 512;
-constexpr size_t RING_BUFFER_SIZE = 1024;
+constexpr size_t RX_BUFFER_SIZE = 256;
+constexpr size_t RING_BUFFER_SIZE = 2 * RX_BUFFER_SIZE;
 constexpr uint8_t frame_header = 0x5A;
 constexpr uint8_t frame_type = 0xA5;
 constexpr uint16_t frame_data_length = 76;
