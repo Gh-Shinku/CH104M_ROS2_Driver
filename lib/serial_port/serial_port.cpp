@@ -16,6 +16,9 @@ SerialPort::SerialPort(io_context &ioc, const std::string &port, const std::func
   serial_.set_option(serial_port::parity(serial_port::parity::none));
   serial_.set_option(serial_port::stop_bits(serial_port::stop_bits::one));
   serial_.set_option(serial_port::character_size(8));
+}
+
+void SerialPort::start() {
   start_read();
   start_profiling();
 }
@@ -80,8 +83,8 @@ void SerialPort::handle_rx_data(RxBuffer::const_iterator iter, const size_t len)
       imu_frame_.crc16 = (frame_buffer_[5] << 8) | frame_buffer_[4];
       if (check_crc(frame_buffer_.begin(), crc16_) == imu_frame_.crc16) {
         parse_frame_from_buffer(frame_buffer_.begin(), imu_frame_);
-        // serial_rx_cplt_cb_(imu_frame_.data);
         const auto &imu_data = imu_frame_.data;
+        serial_rx_cplt_cb_(imu_data);
         logger_->info("id: {}, acc: [{}, {}, {}], euler: [{}, {}, {}]", imu_data.id, imu_data.acceleration[0], imu_data.acceleration[1],
                       imu_data.acceleration[2], imu_data.euler_angles[0], imu_data.euler_angles[1], imu_data.euler_angles[2]);
         ++frame_count_;

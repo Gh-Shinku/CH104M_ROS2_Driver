@@ -34,6 +34,10 @@ if(BUILD_TEST)
   add_executable(test_serial test/test_serial_port.cpp)
   target_include_directories(test_serial PRIVATE include)
   target_link_libraries(test_serial PRIVATE lib_serial_port ${THIRD_DEPS})
+
+  add_executable(test_integration test/test_integration.cpp)
+  target_include_directories(test_integration PRIVATE include)
+  target_link_libraries(test_integration PRIVATE lib_serial_port ${THIRD_DEPS})
 endif()
 
 ament_package()

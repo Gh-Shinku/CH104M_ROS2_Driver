@@ -14,7 +14,7 @@ int main() {
     spdlog::info("id: {}, acc: [{}, {}, {}], euler: [{}, {}, {}]", imu_data.id, imu_data.acceleration[0], imu_data.acceleration[1],
                  imu_data.acceleration[2], imu_data.euler_angles[0], imu_data.euler_angles[1], imu_data.euler_angles[2]);
   });
-
+  serial_port->start();
   ioc.run();
   return 0;
 }

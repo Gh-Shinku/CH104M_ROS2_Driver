@@ -13,13 +13,6 @@
 #include <functional>
 
 namespace imu_receiver {
-
-using boost::crc_16_type;
-using boost::asio::io_context;
-using boost::asio::serial_port;
-using ring_buffer = boost::circular_buffer<uint8_t>;
-using crc_16_arc = boost::crc_optimal<16, 0x1021, 0x0000, 0x0000, false, false>;
-
 struct ImuData {
   uint8_t label; /* 0x91 */
   uint8_t id;
@@ -58,6 +51,11 @@ constexpr uint8_t frame_header = 0x5A;
 constexpr uint8_t frame_type = 0xA5;
 constexpr uint16_t frame_data_length = 76;
 
+using boost::crc_16_type;
+using boost::asio::io_context;
+using boost::asio::serial_port;
+using ring_buffer = boost::circular_buffer<uint8_t>;
+using crc_16_arc = boost::crc_optimal<16, 0x1021, 0x0000, 0x0000, false, false>;
 using ImuFrameBuffer = std::array<uint8_t, IMU_FRAME_SIZE>;
 using RxBuffer = std::array<uint8_t, RX_BUFFER_SIZE>;
 
@@ -70,6 +68,13 @@ inline T parse_field(const uint8_t *field_ptr, size_t &offset) {
 }
 
 class SerialPort {
+public:
+  SerialPort(io_context &ioc, const std::string &port, const std::function<void(const ImuData &)> &serial_rx_cplt_cb);
+
+  SerialPort(const SerialPort &) = delete;
+  SerialPort &operator=(const SerialPort &) = delete;
+  void start();
+
 private:
   io_context &ioc_;
   serial_port serial_;
@@ -88,9 +93,6 @@ private:
   void handle_rx_data(RxBuffer::const_iterator iter, const size_t len);
   void start_profiling();
   void start_read();
-
-public:
-  SerialPort(io_context &ioc, const std::string &port, const std::function<void(const ImuData &)> &serial_rx_cplt_cb);
 };
 
 }  // namespace imu_receiver
