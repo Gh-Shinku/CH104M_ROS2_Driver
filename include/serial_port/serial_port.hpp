@@ -69,11 +69,12 @@ inline T parse_field(const uint8_t *field_ptr, size_t &offset) {
 
 class SerialPort {
 public:
+  // 考虑到可能不止 serial_port 内部依赖于 asio 的事件循环，于是就设计为从外部传入 io_context
   SerialPort(io_context &ioc, const std::string &port, const std::function<void(const ImuData &)> &serial_rx_cplt_cb);
 
   SerialPort(const SerialPort &) = delete;
   SerialPort &operator=(const SerialPort &) = delete;
-  void start();
+  void start(bool do_profiling = false);
 
 private:
   io_context &ioc_;

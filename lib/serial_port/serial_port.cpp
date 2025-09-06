@@ -18,9 +18,9 @@ SerialPort::SerialPort(io_context &ioc, const std::string &port, const std::func
   serial_.set_option(serial_port::character_size(8));
 }
 
-void SerialPort::start() {
+void SerialPort::start(bool do_profiling) {
   start_read();
-  start_profiling();
+  if (do_profiling) start_profiling();
 }
 
 static void parse_frame_from_buffer(ImuFrameBuffer::const_iterator frame_header_iter, ImuFrame &imu_frame) {
