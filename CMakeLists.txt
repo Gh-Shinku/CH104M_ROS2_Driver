@@ -6,16 +6,14 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_BUILD_DIR build)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_BUILD_DIR build)
 
-add_compile_options(
-  -Wall
-  -Wpedantic
-  -Wextra
-  "$<$<CONFIG:Debug>:-O0;-g;-ggdb>"
-  "$<$<CONFIG:Release>:-O2>"
-)
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -ggdb")
+set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
+
+add_compile_options(-Wall -Wpedantic -Wextra)
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
