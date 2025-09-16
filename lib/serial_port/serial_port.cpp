@@ -76,7 +76,7 @@ void SerialPort::handle_rx_data(RxBuffer::const_iterator iter, const size_t len)
   // logger_->info("read_some: {}(Bytes)", len);
   ring_buffer_.insert(ring_buffer_.end(), iter, iter + len);
   auto iter_header = std::find(ring_buffer_.begin(), ring_buffer_.end(), frame_header);
-  if (iter_header != ring_buffer_.end() && (*(iter_header + 1)) == frame_type) {
+  if (iter_header != ring_buffer_.end() && std::distance(iter_header, ring_buffer_.end()) >= 2 && (*(iter_header + 1) == frame_type)) {
     while (static_cast<size_t>(std::distance(iter_header, ring_buffer_.end())) >= IMU_FRAME_SIZE) {
       std::copy(iter_header, iter_header + IMU_FRAME_SIZE, frame_buffer_.begin());
       iter_header += IMU_FRAME_SIZE;
